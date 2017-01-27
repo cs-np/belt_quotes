@@ -6,7 +6,7 @@ import re
 
 EMAIL_REGEX = re.compile(r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)")
 NAME_REGEX = re.compile(r'/^[a-zA-Z]+', re.MULTILINE)
-# PASSWORD_REGEX = re.compile(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*(_|[^\w])).+$', re.MULTILINE)
+PASSWORD_REGEX = re.compile(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*(_|[^\w])).+$', re.MULTILINE)
 
 # ==============================================================================
 #                                   USER MANAGER
@@ -57,12 +57,12 @@ class UserManager(models.Manager):
             valid = False
 
 # Checking PASSWORD
-        # if len(password) < 8:
-        #     error_list.append('Password cannot be less than 8 Characters')
-        #     valid = False
-        # if not PASSWORD_REGEX.match(password):
-        #     error_list.append('Password Requires atleast One Uppercase, One Lowercase, One Number and One Symbol')
-        #     valid = False
+        if len(password) < 8:
+            error_list.append('Password cannot be less than 8 Characters')
+            valid = False
+        if not PASSWORD_REGEX.match(password):
+            error_list.append('Password Requires atleast One Uppercase, One Lowercase, One Number and One Symbol')
+            valid = False
         if password != passconf:
             error_list.append("Passwords Doesn't Match")
             valid = False
