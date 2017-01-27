@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Welcome {{ user.first_name| title }}</title>
+        <style media="screen">
+        .header {
+            text-align: right;
+            margin-bottom: -40px;
+        }
+        </style>
+    </head>
+    <body>
+        <div class="header">
+            <a href="/logout">Log Out</a>
+        </div>
+        <h1>Welcome, {{ user.first_name| title }}!</h1>
+        <div>
+            <p>Contribute a Quote:</p>
+            {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                <li{% if message.tags %} class="{{ message.error }}", style="color: red"{% endif %}>{{ message }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+            <form action="add_quote" method="post">
+                {% csrf_token %}
+                <label>Quoted By: </label>
+                <input type="text" name="quotedby"><br><br>
+                <label>Message:</label><br>
+                <textarea name="quote" rows="4" cols="40"></textarea><br>
+                <input type="submit" value="Submit">
+            </form>
+        </div>
+        <div>
+            <h1>Quotable Quotes</h1>
+            {% for quote in quotes %}
+            <div>
+                <span>
+                    {{quote.quotedby | title}}: {{quote.quote | title}}
+                </span><br>
+                <span>Posted by: <a href="{%url 'view_user' user_id=quote.user.id %}">{{quote.user.first_name | title}}</a></span>
+                &nbsp;&nbsp;&nbsp;&nbsp;<a href="{%url 'add_fav' quote_id=quote.id %}">Add to My List</a>
+                <hr>
+                {% endfor %}
+            </div>
+        </div>
+        <div>
+            <h1>Your Favorites</h1>
+            {% for quote in fav_quotes %}
+            <div>
+                <span>
+                    {{quote.quotes.quotedby | title}}: {{quote.quotes.quote | title}}
+                </span><br>
+                <span>Posted by: <a href="{%url 'view_user' user_id=quote.quotes.user.id %}">{{quote.quotes.user.first_name | title}}</a></span>
+                &nbsp;&nbsp;&nbsp;&nbsp;<a href="{%url 'rem_fav' quote_id=quote.quotes.id %}">Remove From My List</a>
+                <hr>
+            {% endfor %}
+        </div>
+    </body>
+</html>
